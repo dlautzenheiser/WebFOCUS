@@ -1,0 +1,14 @@
+-* For details, see: http://bi-software-webfocus.blogspot.com/2008/12/dude-wheres-my-trace.html
+
+
+
+-* this code turns on two SQL traces: see generated SQL and optimization messages 
+SET TRACEOFF = ALL
+SET TRACEON = STMTRACE//CLIENT
+SET TRACEON = SQLAGGR//CLIENT
+SET XRETRIEVAL = OFF
+SET TRACEUSER = ON
+-RUN 
+
+-* Note: the XRETRIEVAL setting turns off actual SQL execution (you won't get any records)
+
