@@ -5,9 +5,11 @@
 -DEFAULT &INPUTFILE = 'NAME_OF_INPUT_FILE';
 -PROMPT &INPUTFILE ; 
 
+-* you might need to dynamically set the Hyperstage database owner 
 -SET &OWNER = 'dbowner.';
--SET &HYPERFILE = 'HYPERSTAGE_' || &INPUTFILE
+-SET &HYPERFILE = 'HYPERSTAGE_' || &INPUTFILE ; 
 
+-* defaults for the upcoming -READFILE 
 -DEFAULTH &COLTYPE = '';
 -DEFAULTH &LENGTH = '';
 -DEFAULTH &SCALE = '';
