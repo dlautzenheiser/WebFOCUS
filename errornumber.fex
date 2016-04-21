@@ -1,0 +1,10 @@
+-* File testerror1.fex
+-PROMPT &WFERRORNUM.Enter the error number.
+-SET &ERRNUM = &WFERRORNUM;
+-SET &ERRORMSG = FEXERR(&ERRNUM, 'A100');
+-TYPE The short error message for &WFERRORNUM is:
+-TYPE &ERRORMSG
+-TYPE The full description of the error is:
+? &WFERRORNUM
+-RUN
+ 
