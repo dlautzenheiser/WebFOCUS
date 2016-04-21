@@ -1,0 +1,24 @@
+-*-SET &ECHO = 'OFF';
+-*-SET &PROGRAM = 'swftbrowse /B';
+-*-SET &C_CALL = 'c:\ibi\WebFOCUS77\client\wfc\web\cgi\' || &PROGRAM;
+-*
+-*-* use SYSTEM function to call program
+-*-* SYSTEM returns numeric code identifying success or failure
+-*-* SYSTEM has three parameters: length of command string, the command string, format of return code
+-*-SET &&RETCODE = SYSTEM(&C_CALL.LENGTH,&C_CALL,'D4');
+-*-TYPE Return Code=&&RETCODE
+ 
+-SET &ECHO = 'OFF';
+ 
+-DEFAULT &PARM = 'informationbuilders.com'; 
+ 
+-SET &PROGRAM = 'seccheck' ; 
+-SET &C_CALL = 'c:\ibi\apps\baseapp\' || &PROGRAM | ' ' | &PARM; 
+ 
+-* use SYSTEM function to call program
+-* SYSTEM returns numeric code identifying success or failure
+-* SYSTEM has three parameters: length of command string, the command string, format of return code
+-SET &&RETCODE = SYSTEM(&C_CALL.LENGTH,&C_CALL,'D4');
+-TYPE Return Code=&&RETCODE
+ 
+ 
