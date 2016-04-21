@@ -1,0 +1,121 @@
+-* File graph_dynamic.fex
+ 
+-SET &ECHO = 'ON';
+ 
+-SET &SUMMARY = 'SALARY';
+-SET &XAXIS   = 'MONTH';
+-SET &YAXIS   = 'DEPT';
+ 
+DEFINE FILE EMPDATA
+IHIREDATE/I8YYMD = HIREDATE;
+AHIREDATE/A8YYMD = EDIT(IHIREDATE);
+MONTH/A2 = EDIT(AHIREDATE,'$$$$99$$');
+END
+TABLE FILE EMPDATA
+SUM &SUMMARY
+ACROSS &YAXIS
+BY  &XAXIS
+ON TABLE HOLD AS TEMPFL01
+END
+-RUN
+ 
+-* make a list of the Y Axis values
+TABLE FILE EMPDATA
+COUNT ENTRIES
+BY &YAXIS
+ON TABLE HOLD AS TEMPFL02
+END
+-RUN
+-SET &NBR_Y = &LINES ;
+ 
+-TYPE There are &NBR_Y Y Axis values...
+ 
+-SET &COUNTER = 0;
+-REPEAT READLOOP &NBR_Y TIMES
+-SET &COUNTER = &COUNTER + 1;
+-READ TEMPFL02 &DESC&COUNTER.EVAL.A20.
+-TYPE DESC&COUNTER = &DESC&COUNTER.EVAL
+-READLOOP
+ 
+ 
+-* testing begin
+?FF TEMPFL01
+-RUN
+TABLE FILE TEMPFL01
+SUM E02 E03 E04 E05 E06 E07 E08 E09
+BY E01
+END
+-RUN
+-* testing end
+ 
+ 
+GRAPH FILE TEMPFL01
+SUM
+ 
+-SET &ECOUNTER = 1;
+-SET &COUNTER = 0;
+-REPEAT SUMLOOP &NBR_Y TIMES
+-SET &ECOUNTER = &ECOUNTER + 1;
+-SET &COUNTER = &COUNTER + 1;
+  E0&ECOUNTER AS '&DESC&COUNTER.EVAL'
+-SUMLOOP
+ 
+BY &XAXIS
+ 
+ON GRAPH SET LOOKGRAPH VLINSTK2
+ON GRAPH SET GRAPHEDIT SERVER
+ON GRAPH SET BARNUMB OFF
+ON GRAPH SET 3D OFF
+ON GRAPH SET VZERO ON
+ON GRAPH SET GRID ON
+ON GRAPH SET GRWIDTH 0
+ON GRAPH PCHOLD FORMAT PNG
+ON GRAPH SET GRAPHSTYLE *
+setMarkerDisplay(true);
+setConnectLineMarkers(true);
+setConnectScatterMarkers(true);
+setO1LabelDisplay(true);
+setO1AxisSide(0);
+setO1MajorGridDisplay(true);
+setO1MajorGridStyle(0);
+setO1MinorGridDisplay(false);
+setAxisAssignment(0,0);
+setSeriesType(0,2);
+setY1LabelDisplay(true);
+setY1AxisSide(0);
+setY1MajorGridDisplay(true);
+setY1MajorGridStyle(0);
+setY1MinorGridDisplay(false);
+setTextFormatPreset(getY1Label(),-1);
+setTextFormatPattern(getY1Label(),"#.##");
+setPieFeelerTextDisplay(1);
+setPieLabelDisplay(0);
+setTextFormatPreset(getPieSliceLabel(),1);
+setRiserBorderMode(1);
+setSeriesDefaultTransparentBorderColor(true);
+setUseSeriesBorderDefaults(true);
+setLegendDisplay(true);
+setFontSizeAbsolute(getY1Title(),true);
+setFontSizeAbsolute(getY1Label(),true);
+setFontSizeAbsolute(getY2Title(),true);
+setFontSizeAbsolute(getY2Label(),true);
+setFontSizeAbsolute(getO1Title(),true);
+setPlace(true);
+ENDSTYLE
+ON GRAPH SET STYLE *
+     SQUEEZE=ON,
+     ORIENTATION=PORTRAIT,
+$
+TYPE=REPORT,
+     GRID=OFF,
+     FONT='TIMES NEW ROMAN',
+     SIZE=10,
+$
+TYPE=HEADING,
+     LINE=1,
+     OBJECT=FIELD,
+     ITEM=1,
+     COLOR='BLACK',
+$
+ENDSTYLE
+END

@@ -1,0 +1,15 @@
+-* File timestamp.fex
+-SET &TODAY = TODAY('A8'); 
+-SET &HHMMSS = HHMMSS('A8');
+-STEP01
+-TYPE ...Started at &TODAY &HHMMSS : &FOCFEXNAME STEP01 
+-* your step here; simulating a 10-second process 
+-SET &DELAY = SLEEP(10, 'I2');               
+ 
+-SET &TODAY = TODAY('A8'); 
+-SET &HHMMSS = HHMMSS('A8');
+-TYPE .....Ended at &TODAY &HHMMSS : &FOCFEXNAME STEP01 
+ 
+ 
+ 
+ 

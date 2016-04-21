@@ -1,0 +1,16 @@
+-* File leapyear.fex
+ 
+ 
+-* A year will be a leap year if it is divisible by 4 but not by 100.
+-* If a year is divisible by 4 and by 100, it is not a leap year unless it is also divisible by 400.
+ 
+-PROMPT &YEAR.Enter a year.
+ 
+-SET &REMAINDER4   = IF IMOD(&YEAR,   4, 'I1') IS 0 THEN 0 ELSE 1;
+-SET &REMAINDER100 = IF IMOD(&YEAR, 100, 'I1') IS 0 THEN 0 ELSE 1;
+-SET &REMAINDER400 = IF IMOD(&YEAR, 400, 'I1') IS 0 THEN 0 ELSE 1;
+ 
+-SET &LEAPYEAR = IF (&REMAINDER4 IS 0 AND &REMAINDER100 NE 0) THEN 'IS' ELSE
+-                IF (&REMAINDER4 IS 0 AND &REMAINDER100 IS 0 AND &REMAINDER400 IS 0) THEN 'IS' ELSE 'IS NOT';
+ 
+-TYPE YEAR &YEAR &LEAPYEAR A LEAP YEAR
