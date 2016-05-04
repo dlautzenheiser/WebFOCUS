@@ -1,0 +1,153 @@
+
+
+
+//Begin function window_onload
+function window_onload() {
+
+
+UpdateData();
+
+
+// TODO: Add your event handler code here
+//add onInitialUpdate() function to make changes before initial run of the reports
+}
+//End function window_onload
+
+
+
+
+
+
+function validateGroups() {
+
+
+var string = document.form1.textarea1.value;
+// remove all spaces and apostrophes
+string = string.replace(/\s/g,'');
+string = string.replace(/'/g,'');
+document.form1.textarea1.value = string;
+var actual_length = string.length;
+
+
+var radio_value = 'NONE';
+var group_length = 0;
+var nbr_commas = 0;
+var expected_length = 0;
+
+
+
+
+// get the group type radio button value
+if (document.getElementById('radio10').checked) {
+          //alert('label_0 is checked');
+   radio_value = document.getElementById('radio10').value;
+}
+else if (document.getElementById('radio11').checked) {
+      //alert('label_1 is checked');
+   radio_value = document.getElementById('radio11').value;
+}
+else if (document.getElementById('radio12').checked) {
+      //alert('label_2 is checked');
+   radio_value = document.getElementById('radio12').value;
+}
+else if (document.getElementById('radio13').checked) {
+      //alert('label_3 is checked');
+   radio_value = document.getElementById('radio13').value;
+}
+else if (document.getElementById('radio14').checked) {
+      //alert('label_4 is checked');
+   radio_value = document.getElementById('radio14').value;
+}
+else {
+   //alert('nothing is checked');
+   radio_value = 'NONE';
+}
+
+
+
+
+// get the expected group length and description
+if (radio_value == 'CNUM') {
+   group_desc = '6-character Customer IDs';
+   group_length = 6;
+}
+else if (radio_value == 'LOCAL') {
+   group_desc = '5-digit local numbers';
+   group_length = 5;
+}
+else if (radio_value == 'SUFF') {
+   group_desc = '5-digit local numbers with 3-digit suffixes';
+   group_length = 8;
+}
+else if (radio_value == 'NASCO') {
+   group_desc = '9-digit NASCO numbers';
+   group_length = 9;
+}
+else if (radio_value == 'NAS_DIV') {
+   group_desc = '9-digit NASCO with 3-digit divisions';
+   group_length = 13;
+}
+else {
+   group_desc = 'UNKNOWN';
+   group_length = 0;
+}
+
+
+// how many commas and input values?
+var match_return = string.match(/,/gi);
+if (match_return != null)
+     nbr_commas = match_return.length;
+else
+     nbr_commas = 0;
+
+
+// calculate the expected input length
+if (nbr_commas == 0)
+     expected_length = group_length;
+else
+     expected_length = ((nbr_commas+1)*group_length)+nbr_commas;
+
+
+// if not the expected input length, raise error otherwise okay
+if (expected_length == actual_length)
+   return true;
+else {
+   alert('Verify you entered correct ' + group_desc);
+   document.getElementById('textarea1').focus();
+   return false;
+}
+
+
+
+
+}
+// end of function validateGroups
+
+
+
+
+
+
+
+
+
+
+//Begin function form1Submit_onclick
+function form1Submit_onclick(event) {
+   var eventObject = event ? event : window.event;
+   var ctrl = eventObject.target ? eventObject.target : eventObject.srcElement;
+   //TODO: Add your event handler code here
+   var valid = false;
+
+
+   valid = validateGroups();
+   if (valid) {
+      // if passed the input validations, run the report
+      IbComposer_triggerExecution('task2',1);
+   }
+
+
+}
+//End function form1Submit_onclick
+
+
