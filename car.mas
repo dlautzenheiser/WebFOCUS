@@ -1,0 +1,45 @@
+$--------------------------------------------------------------------
+$ Copyright (c) 1996 Information Builders, Inc.  All rights reserved.
+$
+$ _Name_        ===> car.master
+$ _Opsys_       ===> port
+$ _Description_ ===>
+$               ===>
+$ _Notes_       ===>
+$
+$ _History_:
+$  Date  Time Who Proj      Project Title
+$ ====== ==== === ===== ==============================================
+$ 060306 1842 shs 71470 SAM Update: Delete/UnDelete Sources
+$ 060216 1023 lxg 71043 sam: move projects to folders
+$
+$ END %&$
+$---------------------------------------------------------------------
+FILENAME=CAR,SUFFIX=FOC                                                         
+SEGNAME=ORIGIN,SEGTYPE=S1                                                       
+ FIELDNAME=COUNTRY,COUNTRY,A10,FIELDTYPE=I,$                                    
+SEGNAME=COMP,SEGTYPE=S1,PARENT=ORIGIN                                           
+ FIELDNAME=CAR,CARS,A16,$                                                       
+SEGNAME=CARREC,SEGTYPE=S1,PARENT=COMP                                           
+ FIELDNAME=MODEL,MODEL,A24,$                                                    
+SEGNAME=BODY,SEGTYPE=S1,PARENT=CARREC                                           
+ FIELDNAME=BODYTYPE,TYPE,A12,$                                                  
+ FIELDNAME=SEATS,SEAT,I3,$                                                      
+ FIELDNAME=DEALER_COST,DCOST,D7,$                                               
+ FIELDNAME=RETAIL_COST,RCOST,D7,$                                               
+ FIELDNAME=SALES,UNITS,I6,$                                                     
+SEGNAME=SPECS,SEGTYPE=U,PARENT=BODY                                             
+ FIELDNAME=LENGTH,LEN,D5,$                                                      
+ FIELDNAME=WIDTH,WIDTH,D5,$                                                     
+ FIELDNAME=HEIGHT,HEIGHT,D5,$                                                   
+ FIELDNAME=WEIGHT,WEIGHT,D6,$                                                   
+ FIELDNAME=WHEELBASE,BASE,D6.1,$                                                
+ FIELDNAME=FUEL_CAP,FUEL,D6.1,$                                                 
+ FIELDNAME=BHP,POWER,D6,$                                                       
+ FIELDNAME=RPM,RPM,I5,$                                                         
+ FIELDNAME=MPG,MILES,D6,$                                                       
+ FIELDNAME=ACCEL,SECONDS,D6,$                                                   
+SEGNAME=WARANT,SEGTYPE=S1,PARENT=COMP                                           
+ FIELDNAME=WARRANTY,WARR,A40,$                                                  
+SEGNAME=EQUIP,SEGTYPE=S1,PARENT=COMP                                            
+ FIELDNAME=STANDARD,EQUIP,A40,$                                                 
