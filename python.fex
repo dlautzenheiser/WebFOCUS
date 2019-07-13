@@ -1,0 +1,19 @@
+-* File python.fex
+ 
+-SET &ECHO = 'ALL';
+-DEFAULT &SCRIPT = 'foo.py';
+ 
+ 
+-* put everything together as the command string to run your R script
+-* the no-save parameter tells R not to save the workspace when done
+-* the no-restore parameter tells R not to restore the previous workspace when starting
+-* the vanilla parameter tells R to do minimal start-up and shut-down work (e.g., no-save and no-restore)
+-SET &PYTHON_CALL = 'python c:\ibi\apps\testing\' || &SCRIPT;
+ 
+-* use SYSTEM function to call R
+-* SYSTEM returns numeric code identifying success or failure
+-* SYSTEM has three parameters: length of command string, the command string, format of return code
+-SET &&RETCODE = SYSTEM(&PYTHON_CALL.LENGTH,&PYTHON_CALL,'D4');
+-TYPE Python Return Code=&&RETCODE
+ 
+ 

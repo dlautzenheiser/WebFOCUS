@@ -1,0 +1,51 @@
+-* File: IBFS:/Doug/EDA/EDASERVE/APPPATH/testing/Procedure1.fex Created by WebFOCUS AppStudio
+-SET &ECHO = 'ALL';
+-DEFAULT &YEAR = 'ALL';
+-PROMPT &YEAR.Year:.
+-PROMPT &OPTION.(WinterOlympics,CinciBuildingPermits,CinciHealthInspections,CinciPoliceComplaints).Select download file:.;
+ 
+ 
+-SET &PROGRAM = 'C:\Users\Doug\PycharmProjects\Testing\getolympicmedals.py' ;
+-SET &PYTHON_CALL = '"C:\Program Files\Python36\python.exe" ' | &PROGRAM | ' ' | &OPTION;
+-SET &&RETCODE = SYSTEM(&PYTHON_CALL.LENGTH,&PYTHON_CALL,'D4');
+-TYPE Return Code=&&RETCODE
+ 
+-IF &OPTION IS 'WinterOlympics' THEN GOTO RPT_WinterOlympics ELSE GOTO RPT_DEFAULT;
+ 
+-RPT_WinterOlympics
+ APP PATH PREPEND webdownloads 
+ EX testing/reportWinterOlympics YEAR=&YEAR 
+-RUN
+-GOTO END_PGM 
+ 
+-RPT_DEFAULT
+ APP PATH PREPEND webdownloads 
+ TABLE FILE &OPTION 
+    PRINT * 
+	HEADING CENTER
+	"Downloaded from Web: &OPTION "
+ON TABLE SET PAGE-NUM NOLEAD
+ON TABLE SET LINES 99999
+ON TABLE PCHOLD FORMAT HTML
+ON TABLE SET HTMLCSS ON
+ON TABLE SET STYLE *
+     INCLUDE = endeflt,
+	 ORIENTATION=LANDSCAPE,
+$
+TYPE=TABHEADING,
+     LINE=1,
+     JUSTIFY=LEFT,
+$
+ENDSTYLE
+ 
+ END 
+-RUN
+-GOTO END_PGM 
+ 
+ 
+ 
+-END_PGM 
+ 
+ 
+ 
+ 

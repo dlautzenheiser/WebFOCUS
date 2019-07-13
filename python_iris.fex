@@ -1,0 +1,20 @@
+-* File: IBFS:/Doug/EDA/EDASERVE/APPPATH/testing/Procedure1.fex Created by WebFOCUS AppStudio
+-SET &ECHO = 'OFF';
+-DEFAULT &OPTION = 'validate';
+ 
+-TYPE ----------------------------------------------
+-TYPE WebFOCUS is calling Python machine learning...
+-TYPE ----------------------------------------------
+ 
+-SET &PROGRAM = 'C:\Users\Doug\PycharmProjects\Testing\irisExample.py' ;
+-SET &PYTHON_CALL = '"C:\Program Files\Python36\python.exe" ' | &PROGRAM | ' ' | &OPTION;
+-SET &&RETCODE = SYSTEM(&PYTHON_CALL.LENGTH,&PYTHON_CALL,'D4');
+ 
+-TYPE ----------------------------------------------
+-TYPE Return Code=&&RETCODE
+-TYPE ----------------------------------------------
+ 
+ 
+ 
+ 
+ 
