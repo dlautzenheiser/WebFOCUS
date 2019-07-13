@@ -1,0 +1,5 @@
+keywords<-read.table("c:/ibi/apps/r_data/rprogram_keyword_counts.csv", header=TRUE, sep=",")
+png("C:/ibi/apps/r_data/rprogram_boxplot_counts.png", width=520,height=200)
+par(mar=c(5,3,2,2)+0.1)
+boxplot(keywords$Count, horizontal=TRUE, varwidth=TRUE, xlab="Search Counts")
+dev.off()

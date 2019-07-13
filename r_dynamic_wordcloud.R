@@ -1,0 +1,5 @@
+library(wordcloud)
+keywords<-read.table("c:/ibi/apps/R_DATA/RPROGRAM_KEYWORD_COUNTS.csv", header=TRUE, sep=",")
+png("C:/ibi/apps/r_data/rprogram_wordcloud_counts.png", width=500,height=300)
+wordcloud(keywords$keyword, keywords$count, scale=c(3,.5),max.words=100,min.freq=0,rot.per=0)
+dev.off()
