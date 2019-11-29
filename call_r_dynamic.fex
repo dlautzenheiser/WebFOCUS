@@ -1,0 +1,38 @@
+-* File call_r_dynamic.fex
+ 
+-SET &ECHO = 'ALL';
+-DEFAULT &SCRIPT = 'NONE';
+ 
+-* identify the location of R executables
+-* if there are blanks in any of the paths, enclose within double quotes
+-SET &R_BINARY = '"C:\Program Files\R\R-3.3.3\bin\i386\R"';
+ 
+-* identify the location of installed packages
+-SET &R_LIBS = 'C:\Program Files\R\R-3.3.3\library';
+ 
+-* identify the location of your R scripts
+-SET &R_HOME = 'C:\ibi\apps\r_scripts';
+ 
+-* identify the path of the R script to be run
+-SET &R_SCRIPT = &R_HOME || '\' || &SCRIPT;
+ 
+-* put everything together as the command string to run your R script
+-* the no-save parameter tells R not to save the workspace when done
+-* the no-restore parameter tells R not to restore the previous workspace when starting
+-* the vanilla parameter tells R to do minimal start-up and shut-down work (e.g., no-save and no-restore)
+-SET &R_CALL = '&R_BINARY.EVAL HOME=&R_HOME.EVAL R_LIBS=&R_LIBS.EVAL --vanilla  < &R_SCRIPT.EVAL ';
+ 
+-TYPE R_BINARY=&R_BINARY
+-TYPE R_LIBS=&R_LIBS 
+-TYPE R_HOME=&R_HOME 
+-TYPE R_SCRIPT=&R_SCRIPT 
+ 
+-TYPE R_CALL=&R_CALL 
+ 
+-* use SYSTEM function to call R
+-* SYSTEM returns numeric code identifying success or failure
+-* SYSTEM has three parameters: length of command string, the command string, format of return code
+-SET &&RETCODE = SYSTEM(&R_CALL.LENGTH,&R_CALL,'D4');
+-TYPE R Return Code=&&RETCODE
+ 
+ 

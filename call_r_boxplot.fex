@@ -1,0 +1,26 @@
+-* File call_r_boxplot.fex
+ 
+-SET &ECHO = 'ALL';
+-DEFAULT &GRAPH = 'NONE'; 
+ 
+-IF &GRAPH IS 'NONE' THEN GOTO EXIT_CALL; 
+ 
+-*-SET &REXEC = 'C:\Program Files\R\R-2.15.1\bin\i386\R.exe';
+-* DOS STATE &REXEC
+-*-RUN
+ 
+-SET &R_EXEC = '"C:\Program Files\R\R-2.15.1\bin\i386\R"'; 
+ 
+-SET &R_PGM = IF &GRAPH IS 'BOXPLOT'   THEN 'c:\ibi\apps\rscriptrstat\boxplot.R' ELSE 
+-             IF &GRAPH IS 'HISTOGRAM' THEN 'c:\ibi\apps\rscriptrstat\histogram.R' ELSE
+-                                           'badR';
+ 
+-SET &r = '&R_EXEC.EVAL HOME=c:\ibi\apps\rscriptrstat --no-save < &R_PGM.EVAL ';
+ 
+-RUN
+-SET &RETCODE = SYSTEM(&r.LENGTH,&r,'D4');
+-RUN
+-TYPE RETCODE=&RETCODE
+ 
+-EXIT_CALL 
+ 
