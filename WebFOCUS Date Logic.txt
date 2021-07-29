@@ -15,12 +15,6 @@
 -DEFAULTH &LRD_START_DATE = '07/01/2021';
 -DEFAULTH &LRD_END_DATE = '07/01/2021';
 
--DEFAULTH &PortalId = 'RevenueAnalytics';
--DEFAULTH &UserId  = 'mguy@spplus.com';
--DEFAULT &ClientName = 'Capital One';
--DEFAULT &LevelName = 'Client';
--DEFAULT &Selection = '_FOC_NULL';
-
 -* User can select start and end dates with calendar controls or use a pre-set date (WTD, MTD, LM, LQ, LRD=last reported date in database)
 
 -IF &DATEOPTION NE 'CALENDAR' THEN GOTO SKIP_CALENDAR;
@@ -115,11 +109,9 @@
 ENGINE SQLMSS SET DEFAULT_CONNECTION CPSSSAS
 SQL SQLMSS PREPARE SQLOUT FOR
 SELECT
-MAX(L.MaxDateOfBusiness) AS StartDate
-  , MAX(L.MaxDateOfBusiness) AS EndDate
-FROM DataAnalyticsODS.dbo.DimLocationDeviceID AS L
-INNER JOIN WFDS.cfg.ufnClientHierarchyGetChildID('&PortalId', '&ClientName', '&Selection', '&UserId') AS S
-    ON L.[Location] = S.LocationID;
+    MAX(MaxDateOfBusiness) AS StartDate
+  , MAX(MaxDateOfBusiness) AS EndDate
+FROM database.dbo.tablename
 END
 DEFINE FILE SQLOUT
 LASTDATE/MDYY = IF EndDate IS MISSING THEN 01011999 ELSE EndDate; 
