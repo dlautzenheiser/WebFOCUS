@@ -1,0 +1,42 @@
+-SET &ECHO = 'ALL';
+-DEFAULT &SearchString = 'string';
+-PROMPT &SearchString.Enter search string (not case sensitive).; 
+
+-SET &UPSEARCH = UPCASE(&SearchString.LENGTH, '&SearchString.EVAL', 'A&SearchString.LENGTH'); 
+-TYPE UPSEARCH="&UPSEARCH.EVAL"
+DEFINE FILE WF_REPOSOBJ
+TYPEDESC/A30=DECODE OBJTYPE( 102 'Reporting Object' 103 'Stylesheet' 106 'Help HTM' 107 'CSS' 109 'WF Procedure' 110 'HTML' 
+                             113 'Schedule' 117 'URL' 4 'Other' 0 'Static Web Component' 301 'User Entry' 115 'Distribution List' 118 'Report Library Content' ELSE 'Unknown');
+IGNORE/I1 = IF OBJTYPE IS 4 OR 118 THEN 1 ELSE 0; 
+OBJNAME_A/A64 = OBJNAME; 
+UPOBJNAME/A64 = UPCASE(64, OBJNAME_A, OBJNAME); 
+END
+TABLE FILE WF_REPOSOBJ
+WHERE CLASSNAME IS 'WfItem';
+WHERE UPOBJNAME CONTAINS '&UPSEARCH.EVAL'; 
+WHERE OBJTYPE IS 109;
+PRINT 
+ CREATEDBY/A20 AS 'Created By'
+ CREATEDON/YYMD AS 'Created On'
+ LASTMODON/YYMD AS 'Last Modified On'
+BY PRT_PATH/A100 AS 'Path'  
+BY TYPEDESC AS 'Object Type'
+-* BY OBJTYPE AS 'Obj Type,Code'
+BY OBJNAME AS 'Object Name'
+ON PRT_PATH UNDER-LINE SUBHEAD
+"Path: <PRT_PATH " 
+HEADING
+"Search Results: WebFOCUS Procedures with Names Containing '&SearchString.EVAL' (not case sensitive)"
+
+ON TABLE SET BYDISPLAY ON 
+ON TABLE SET ONLINE-FMT HTML 
+ON TABLE SET HTMLCSS ON
+ON TABLE SET LINES 999999
+ON TABLE SET STYLE *
+TYPE=REPORT,
+     TITLETEXT='Content Repository Search Results',
+     SQUEEZE=ON, ORIENTATION=LANDSCAPE,$
+     INCLUDE=IBFS:/WFC/Global/Themes/Custom/SPPlus/theme.sty, $
+ENDSTYLE
+END
+-RUN 
