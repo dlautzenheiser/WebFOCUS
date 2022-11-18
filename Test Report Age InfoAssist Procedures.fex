@@ -1,10 +1,4 @@
 -SET &ECHO = 'ALL';
--* -DEFAULT &SearchString = 'string';
--* -PROMPT &SearchString.Enter search string (not case sensitive).; 
-
--* -SET &UPSEARCH = UPCASE(&SearchString.LENGTH, '&SearchString.EVAL', 'A&SearchString.LENGTH'); 
--* -TYPE UPSEARCH="&UPSEARCH.EVAL"
-
 -DEFAULT &SORTFIELD = 'FOLDERNAME';
 -DEFAULT &WFFMT = 'HTML';
 
