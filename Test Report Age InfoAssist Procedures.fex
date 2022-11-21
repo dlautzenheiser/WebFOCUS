@@ -1,7 +1,7 @@
 -SET &ECHO = 'ALL';
 -DEFAULT &SORTFIELD = 'FOLDERNAME';
 -DEFAULT &WFFMT = 'HTML';
--DEFAULT &SMY_OR_DTL = 'YES'; 
+-DEFAULT &SMY_OR_DTL = 'Summary'; 
 
 -PROMPT &SORTFIELD.(<Folder Name,FOLDERNAME>,<CreatedBy UserID,CREATEDBY>).Summarize by.;
 -PROMPT &WFFMT.(<Online,HTML>,<Spreadsheet,XLSX BYTOC 1>).Output format.;
