@@ -1,48 +1,13 @@
 -SET &ECHO = 'ALL';
 -DEFAULT &SORTFIELD = 'FOLDERNAME';
 -DEFAULT &WFFMT = 'HTML';
+-DEFAULT &SMY_OR_DTL = 'YES'; 
 
 -PROMPT &SORTFIELD.(<Folder Name,FOLDERNAME>,<CreatedBy UserID,CREATEDBY>).Summarize by.;
 -PROMPT &WFFMT.(<Online,HTML>,<Spreadsheet,XLSX BYTOC 1>).Output format.;
+-PROMPT &SMY_OR_DTL.(<Summary,Summary>,<Detail,Detail>).Summary or Detail?.; 
 
 -SET &SORTFIELD_DESC = IF &SORTFIELD IS 'FOLDERNAME' THEN 'Folder Name' ELSE IF &SORTFIELD IS 'CREATEDBY' THEN 'CreatedBy UserID' ELSE 'BADSORTFIELD';
-
-
--*  FILENAME=  WF_REPOSOBJ
--*  HANDLE        handle        A255V
--*  CLASSNAME     classname     A20V
--*  APPNAME       appname       A256V
--*  CREATEDBY     createdby     A128V
--*  CREATEDON     createdon     HYYMDm
--*  DEF_LNG       def_lng       A6V
--*  EXP_DATE      exp_date      HYYMDm
--*  EXT_ID        ext_id        A90V
--*  LASTACCESSBY  lastaccessby  A128V
--*  LASTACCESSON  lastaccesson  HYYMDm
--*  LASTMODBY     lastmodby     A128V
--*  LASTMODON     lastmodon     HYYMDm
--*  OBJNAME       objname       A64V
--*  OBJTYPE       objtype       I11
--*  PRT_PATH      prt_path      A256V
--*  RSNAME        rsname        A256V
--*  SRT_ORDER     srt_order     I11
-
-
--* FILENAME=  UOA_USERS
--* ID            ID            I11
--* CONCURENT     CONCURENT     I11
--* DESCRIPTION   DESCRIPTION   A255V
--* EMAIL         EMAIL         A255V
--* LASTLOGIN     LASTLOGIN     HYYMDs
--* NAME          NAME          A255V
--* NAMESPACE     NAMESPACE     A255V
--* NUMBADTRIES   NUMBADTRIES   I11
--* PASSWORD      PASSWORD      A255V
--* PASSWORDSETON PASSWORDSETON HYYMDs
--* PRIMGROUPID   PRIMGROUPID   I11
--* PROPERTIES    PROPERTIES    A4000V
--* STATUS        STATUS        A255V
-
 
 -SET &TODYYM = EDIT('&YYMD.EVAL','999999'); 
 -SET &STARTYYM = AYM('&TODYYM.EVAL',-18,'I6YYM'); 
@@ -73,13 +38,6 @@ END
 -IF &FOCERRNUM NE 0 THEN GOTO ERROR;
 -IF &LINES IS 0 THEN GOTO ERROR; 
 
--* TABLE FILE XREF_SECURITYCENTER_USERS_USERID
--* PRINT * 
--* END 
--* -RUN 
--* -EXIT 
-
-
 
 JOIN LEFT_OUTER CREATEDBY IN WF_REPOSOBJ TO USERID IN XREF_SECURITYCENTER_USERS_USERID AS J1
 DEFINE FILE WF_REPOSOBJ
@@ -106,22 +64,24 @@ ACROSS LASTACCESSON_YEAR AS 'Year Last Accessed' ROW-TOTAL AS 'Total'
 BY YEARSTATUS AS 'Status Based on Year' SUB-TOTAL AS 'Total'
 BY &SORTFIELD AS '&SORTFIELD_DESC.EVAL' 
 
+-IF &SMY_OR_DTL NE 'Detail' THEN GOTO SKIP_DETAIL;
 BY PRT_PATH AS 'Path Name'
 BY OBJNAME AS 'Procedure Name'
 BY LASTACCESSON AS 'Last Accessed On'
+-SKIP_DETAIL 
 
 HEADING
 "Age of WebFOCUS Procedures in InfoAssist Folders Sorted by &SORTFIELD_DESC.EVAL"
-"Considering those Accessed within 18 Months as Active (&STARTMDY.EVAL or earlier)"
+"Considering those Accessed within 18 Months as Active (&STARTMDY.EVAL or earlier) - &SMY_OR_DTL.EVAL"
 
 ON TABLE COLUMN-TOTAL AS 'Grand Total' 
 ON TABLE SET BYDISPLAY ON 
-ON TABLE PCHOLD AS 'Age of WebFOCUS Procedures' FORMAT &WFFMT  
+ON TABLE PCHOLD AS 'Age of WebFOCUS InfoAssist Procedures by &SORTFIELD_DESC.EVAL - &SMY_OR_DTL.EVAL' FORMAT &WFFMT  
 ON TABLE SET HTMLCSS ON
 ON TABLE SET LINES 999999
 ON TABLE SET STYLE *
 TYPE=REPORT,
-     TITLETEXT='Age of InfoAssist Procedures',
+     TITLETEXT='Age of InfoAssist Procedures by &SORTFIELD_DESC.EVAL',
      SQUEEZE=ON, ORIENTATION=LANDSCAPE,$
      INCLUDE=IBFS:/WFC/Global/Themes/Custom/SPPlus/theme.sty, $
 ENDSTYLE
