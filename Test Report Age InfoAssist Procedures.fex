@@ -72,7 +72,7 @@ BY LASTACCESSON AS 'Last Accessed On'
 
 HEADING
 "Age of WebFOCUS Procedures in InfoAssist Folders Sorted by &SORTFIELD_DESC.EVAL"
-"Considering those Accessed within 18 Months as Active (&STARTMDY.EVAL or earlier) - &SMY_OR_DTL.EVAL"
+"Considering those Last Accessed 18 Months ago as Inactive (&STARTMDY.EVAL or earlier) - &SMY_OR_DTL.EVAL"
 
 ON TABLE COLUMN-TOTAL AS 'Grand Total' 
 ON TABLE SET BYDISPLAY ON 
