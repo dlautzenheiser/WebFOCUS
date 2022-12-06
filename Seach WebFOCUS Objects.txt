@@ -7,7 +7,7 @@
 
 
 -SET &SearchString = IF '&SearchString.EVAL' IS '' OR 'ALL' OR 'all' OR 'All' THEN '_FOC_NULL' ELSE '&SearchString.EVAL'; 
--SET &SearchStringDesc = IF '&SearchString.EVAL' IS '_FOC_NULL' THEN '' ELSE 'with names or descriptions containing ' | ('''' || &SearchString.EVAL || '''') || ' (not case sensitive)';
+-SET &SearchStringDesc = IF '&SearchString.EVAL' IS '_FOC_NULL' THEN '' ELSE 'with names or descriptions containing ' | ('''' || '&SearchString.EVAL' || '''') || ' (not case sensitive)';
 
 
 -SET &UPSEARCH = UPCASE(&SearchString.LENGTH, '&SearchString.EVAL', 'A&SearchString.LENGTH'); 
