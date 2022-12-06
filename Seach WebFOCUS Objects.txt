@@ -1,0 +1,62 @@
+-SET &ECHO = 'OFF';
+-DEFAULT &SearchString = 'searchstring';
+-DEFAULT &ObjType = '109';
+
+-PROMPT &SearchString.Enter search string (not case sensitive).; 
+-PROMPT &ObjType.(<Procedure,109>,<Schedule,113>,<Distribution List,115>,<All,_FOC_NULL>).Select object type.;
+
+
+-SET &SearchString = IF '&SearchString.EVAL' IS '' OR 'ALL' OR 'all' OR 'All' THEN '_FOC_NULL' ELSE '&SearchString.EVAL'; 
+-SET &SearchStringDesc = IF '&SearchString.EVAL' IS '_FOC_NULL' THEN '' ELSE 'with names or descriptions containing ' | ('''' || &SearchString.EVAL || '''') || ' (not case sensitive)';
+
+
+-SET &UPSEARCH = UPCASE(&SearchString.LENGTH, '&SearchString.EVAL', 'A&SearchString.LENGTH'); 
+-SET &UPSEARCH2 = STRREP(&UPSEARCH.LENGTH, '&UPSEARCH.EVAL', 1, ' ', 1, '_', &UPSEARCH.LENGTH, 'A&UPSEARCH.LENGTH'); 
+-TYPE UPSEARCH="&UPSEARCH.EVAL"
+
+JOIN LEFT_OUTER HANDLE IN WF_REPOSOBJ TO UNIQUE OBJ_HANDLE IN WF_NLSOBJ AS J1 
+DEFINE FILE WF_REPOSOBJ
+TYPEDESC/A30=DECODE OBJTYPE( 102 'Rptg Obj' 103 'Stylesheet' 106 'Help HTM' 107 'CSS' 109 'Procedure' 110 'HTML' 
+                             113 'Schedule' 117 'URL' 4 'Other' 0 'Static Web Component' 301 'User Entry' 115 'Distrib List' 118 'RptLib Content' 
+                             128 'Page Strings' 131 'Page Grids' 6001 'Page Resource' 4 'JavaScript' ELSE 'Unknown');
+IGNORE/I1 = IF OBJTYPE IS 4 OR 118 THEN 1 ELSE 0; 
+OBJNAME_A/A64 = OBJNAME; 
+OBJDESC_A/A64 = OBJDESC;
+UPOBJNAME/A64 = UPCASE(64, OBJNAME_A, UPOBJNAME); 
+UPOBJDESC/A64 = UPCASE(64, OBJDESC_A, UPOBJDESC);
+END
+TABLE FILE WF_REPOSOBJ
+WHERE CLASSNAME IS 'WfItem';
+WHERE (UPOBJNAME CONTAINS '&UPSEARCH.EVAL' OR '&UPSEARCH2.EVAL') OR (UPOBJDESC CONTAINS '&UPSEARCH.EVAL'); 
+WHERE OBJTYPE IS &ObjType ;
+PRINT 
+ CREATEDBY/A20 AS 'Created By'
+ CREATEDON/YYMD AS 'Created On'
+ LASTMODON/YYMD AS 'Last Modified On'
+ LASTACCESSON/YYMD AS 'Last Accessed On'
+BY PRT_PATH/A100 AS 'Path'  
+BY TYPEDESC AS 'Object Type'
+BY OBJTYPE AS 'Obj Type,Code'
+BY OBJDESC AS 'Title' 
+BY OBJNAME AS 'Name'
+
+ON PRT_PATH UNDER-LINE SUBHEAD
+"Path: <PRT_PATH " 
+HEADING
+"Objects &SearchStringDesc.EVAL "
+" " 
+
+ON TABLE SET DROPBLNKLINE ALL
+ON TABLE SET EMPTYREPORT ON 
+ON TABLE SET BYDISPLAY ON 
+ON TABLE SET ONLINE-FMT HTML 
+ON TABLE SET HTMLCSS ON
+ON TABLE SET LINES 999999
+ON TABLE SET STYLE *
+INCLUDE=IBFS:/FILE/IBI_HTML_DIR/ibi_themes/Warm.sty,$
+TYPE=REPORT,
+     TITLETEXT='Object Search Results',
+     SQUEEZE=ON, ORIENTATION=LANDSCAPE,$
+ENDSTYLE
+END
+-RUN 
