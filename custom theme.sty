@@ -1,0 +1,730 @@
+$ Global Resources / Themes / Custom / CustomerName / theme.sty 
+
+$ Copyright 1996-2018 Information Builders, Inc. All rights reserved.
+-*  $Revision: 1.6 $
+
+*TABLE_STYLE
+TYPE=REPORT,
+     GRID=OFF,
+     FONT='TREBUCHET MS',
+     SIZE=9,
+     STYLE=NORMAL,
+     SQUEEZE=ON,
+     COLOR=RGB(20 20 20),
+     PAGECOLOR='WHITE',
+     TITLELINE=SKIP,
+     HYPERLINK-COLOR=RGB(51 102 255),
+$
+TYPE=REPORT,GRAPHCOLOR='SILVER',GRAPHCOLORNEG='RED',GRAPHWIDTH=.18,$
+TYPE=REPORT,
+    OBJECT=MENU,
+    SIZE=9, 
+    COLOR=RGB(#ffffff),
+    BACKCOLOR=RGB(#000000),
+    HOVER-COLOR=RGB(#ffffff),
+    HOVER-BACKCOLOR=RGB(#333333),
+$
+TYPE=DATA,
+  TOPGAP=0.05,
+     BOTTOMGAP=0.05,
+$
+TYPE=TITLE,
+     STYLE=-UNDERLINE + BOLD,
+$
+TYPE=DATA,
+     COLUMN=ROWTOTAL(*),
+     STYLE=BOLD,
+$
+TYPE=TITLE,
+     COLUMN=ROWTOTAL(*),
+     STYLE=-UNDERLINE +BOLD,
+$
+TYPE=TABHEADING,
+     SIZE=14,
+     JUSTIFY=LEFT, 
+     STYLE=BOLD,
+     COLOR=RGB(75 75 75),
+$
+TYPE=TABFOOTING,
+     SIZE=10,
+     COLOR=RGB(75 75 75),
+$
+TYPE=HEADING, 
+     JUSTIFY=LEFT, 
+     SIZE=12, 
+     STYLE=BOLD,
+     COLOR=RGB(75 75 75),
+$
+TYPE=FOOTING,
+     SIZE=10,
+     COLOR=RGB(75 75 75),
+$
+TYPE=SUBHEAD,
+     BACKCOLOR=RGB(246 246 246),
+$
+TYPE=SUBHEAD,
+      BY=1,
+$
+TYPE=SUBHEAD,
+     OBJECT=FIELD,
+     STYLE=BOLD,
+$
+TYPE=SUBFOOT,
+     SIZE=9,
+$
+TYPE=SUBFOOT,
+     OBJECT=FIELD,
+     STYLE=BOLD,
+$
+TYPE=SUBTOTAL,
+     STYLE=BOLD,
+$
+TYPE=ACROSSVALUE,
+     BACKCOLOR='NONE',
+     STYLE=NORMAL,
+     JUSTIFY=CENTER,
+$
+TYPE=ACROSSTITLE,
+     ACROSSTITLE=SIDE,
+     STYLE=BOLD,
+$
+TYPE=GRANDTOTAL,
+     STYLE=BOLD,
+$
+-*ACTIVE Specific
+TYPE=REPORT,OBJECT=CURRENT-ROW,HOVER-BACKCOLOR=rgb(243 243 243), BACKCOLOR=rgb(215 215 215),$
+TYPE=REPORT, CALC-LOCATION=TOP, $
+TYPE=REPORT, ARICONSET=BLUE, ARSTYLESET=bipib,$
+TYPE=REPORT, OBJECT=CALC-AREA, COLOR=RGB(0 0 0), $
+
+TYPE=REPORT, OBJECT=STATUS-AREA, COLOR=RGB(51 51 51), BACKCOLOR=RGB(255 255 255), JUSTIFY=LEFT, PAGE-LOCATION=BOTTOM,$
+TYPE=REPORT,ARGRAPHENGINE=JSCHART,$
+
+
+*GRAPH_SCRIPT
+-*setting legend
+setLegendPosition(12);
+-*SP+ Series Colors
+-* green/blue/grey/red/yellow shade 3
+setFillColor(getSeries(0),new Color(154, 216, 81));
+setFillColor(getSeries(1),new Color(81, 216, 210));
+setFillColor(getSeries(2),new Color(146, 147, 151));
+setFillColor(getSeries(3),new Color(216, 81, 87));
+setFillColor(getSeries(4),new Color(255, 187, 42));
+
+-* green/blue/grey/red/yellow shade 5
+setFillColor(getSeries(5),new Color(67, 104, 23));
+setFillColor(getSeries(6),new Color(23, 104, 101));
+setFillColor(getSeries(7),new Color(62, 63, 65));
+setFillColor(getSeries(8),new Color(104, 23, 27));
+setFillColor(getSeries(9),new Color(128, 87, 0));
+
+-* green/blue/grey/red/yellow shade 1 
+setFillColor(getSeries(10),new Color(235, 247, 220));
+setFillColor(getSeries(11),new Color(220, 247, 246));
+setFillColor(getSeries(12),new Color(233, 233, 234));
+setFillColor(getSeries(13),new Color(247, 220, 221));
+setFillColor(getSeries(14),new Color(255, 241, 212));
+
+-* green/blue/grey/red/yellow standard 
+setFillColor(getSeries(15),new Color(136, 209, 50));
+setFillColor(getSeries(16),new Color(50, 209, 202));
+setFillColor(getSeries(17),new Color(100,101,105));
+setFillColor(getSeries(18),new Color(209,50,57));
+setFillColor(getSeries(19),new Color(247,168,0));
+
+
+-* green/blue/grey/red/yellow shade 4
+setFillColor(getSeries(20),new Color(112, 174, 39));
+setFillColor(getSeries(21),new Color(39, 174, 168));
+setFillColor(getSeries(22),new Color(104, 105, 109));
+setFillColor(getSeries(23),new Color(174, 39, 45));
+setFillColor(getSeries(24),new Color(212, 145, 0));
+
+-* green/blue/grey/red/yellow shade 2
+setFillColor(getSeries(25),new Color(195, 232, 151));
+setFillColor(getSeries(26),new Color(151, 232, 228));
+setFillColor(getSeries(27),new Color(190, 190, 193));
+setFillColor(getSeries(28),new Color(232, 151, 154));
+setFillColor(getSeries(29),new Color(255, 214, 128));
+
+
+
+
+
+*TABLE_JS
+"settings":
+{ "chartFilterType": "designer" }
+
+*GRAPH_JS
+	"fill": {
+		"color": "transparent"
+	},
+	
+	"border": {
+		"width": 1,
+		"color": "transparent",
+		"dash": ""
+	},
+	"blaProperties": {
+		"areaFillEffect": "70%",
+  		"barGroupGapWidth": "0.4"
+	},
+	"bubbleMarker": {
+		"maxSize": "5%"
+	},
+	"pieProperties": {
+		"holeSize": "80%",
+		"label": {
+		    "visible": false
+		},
+		"totalLabel": {
+			"visible": false,
+			"font": "10pt Sans-Serif",
+			"color": "#505050"
+		}
+	},
+	"gaugeProperties": {
+		"totalLabel": {
+			"color": "#505050"
+		},
+		"secondaryRingFillColor": "#e5e5e5",
+		"startAngle": 270,
+		"endAngle": 270,
+		"axisWidth": "25%",
+		"outerBorder": {
+			"fill": {
+				"color": "transparent"
+			},
+			"width": "6%"
+		}
+	},
+
+	"legend": {
+		"visible": "auto",
+		"markerSize": 12,
+		"lineStyle": {
+			"width": 1,
+			"color": "transparent"
+		},
+		"title": {
+			"visible": false,
+			"font": "10pt Sans-Serif",
+			"color": "#34515e"
+		},
+		"labels": {
+			"font": "10pt Sans-Serif",
+			"color": "#34515e"
+		},
+		"shadow": false,
+		"position": "bottom",
+		"backgroundcolor": "transparent",
+								"matchSeriesMarkers": true,
+		"scroll": {
+			"enabled": true,
+			"handle": {
+				"color": "#D1D1D1",
+				"hoverColor": "#B3B3B3"
+			}
+		},
+		"sizeLegend": {
+			"lineStyle": {
+			"color": "#505050"
+			}
+		},
+		"dock": {
+			"enabled": false,
+			"button": {
+				"color": "#D1D1D1",
+				"hoverColor": "#B3B3B3"
+			}
+		}
+	},
+	"colorScale": {
+		"colorMode": "discrete",
+		"title": {
+			"text": "",
+			"visible": true
+		},
+		"colors": [
+			"#AC34C6",
+			"#893DCC",
+			"#6746D2",
+			"#4D4DD6",
+			"#3455DB",
+			],
+		"labels": {
+			"visible": true,
+			"font": "7.5pt Sans-Serif",
+			"color": "#505050"
+		},
+		"majorGrid": {
+			"visible": true,
+			"aboveRisers": true,
+			"lineStyle": {
+				"width": 1,
+				"color": "rgba(255, 255, 255, 0.3)"
+			},
+			"ticks": {
+				"length": 5,
+				"visible": false,
+				"style": "outer",
+				"lineStyle": {
+					"width": 1,
+					"color": "#BABABA"
+				}
+			}
+		}
+	},
+	"xaxis": {
+		"mustIncludeZero": true,
+		"title": {
+			"visible": true,
+			"font": "bold 12pt Sans-Serif",
+			"color": "#34515e"
+		},
+		"labels": {
+			"visible": true,
+			"font": "10pt Sans-Serif",
+			"color": "#34515e",
+			"excludeMin": false,
+			"nestingConcatSymbol": " : ",
+			"rotation": null
+		},
+		"labelLayout": {
+			"stagger": false,
+			"skip": "auto",
+			"scroll": "auto",
+			"truncate": "auto"
+		},
+		"bodyLineStyle": {
+			"width": 1,
+			"color": "#34515e",
+			"dash": ""
+		},
+		"baseLineStyle": {
+			"width": 1,
+			"color": "#34515e",
+			"dash": ""
+		},
+		"majorGrid": {
+			"visible": false,
+			"aboveRisers": false,
+			"lineStyle": {
+				"width": 1,
+				"color": "#EBEEFC",
+				"dash": ""
+			},
+			"ticks": {
+				"length": 5,
+				"visible": true,
+				"style": "outer",
+				"lineStyle": {
+					"width": 1,
+					"color": "#EBEEFC"
+				}
+			}
+		},
+		"minorGrid": {
+			"visible": false,
+			"count": null,
+			"lineStyle": {
+				"width": 1,
+				"color": "#EBEEFC",
+				"dash": ""
+			},
+			"ticks": {
+				"length": 5,
+				"visible": false,
+				"style": "outer",
+				"lineStyle": {
+					"width": 1,
+					"color": "#EBEEFC"
+				}
+			}
+		}
+	},
+	"yaxis": {
+		"mustIncludeZero": true,
+		"title": {
+			"visible": true,
+			"font": "bold 12pt Sans-Serif",
+			"color": "#34515e"
+		},
+		"labels": {
+			"visible": true,
+			"font": "10pt Sans-Serif",
+			"color": "#34515e",
+			"excludeMin": false,
+			"rotation": null
+		},
+		"bodyLineStyle": {
+			"width": 1,
+			"color": "#34515e",
+			"dash": ""
+		},
+		"baseLineStyle": {
+			"width": 1,
+			"color": "#34515e",
+			"dash": ""
+		},
+		"minorGrid": {
+			"visible": false,
+			"count": null,
+			"lineStyle": {
+				"width": 1,
+				"color": "#EBEEFC",
+				"dash": ""
+			},
+			"ticks": {
+				"length": 5,
+				"style": "outer",
+				"visible": false,
+				"lineStyle": {
+					"width": 1,
+					"color": "#EBEEFC"
+				}
+			}
+		},
+		"majorGrid": {
+			"visible": false,
+			"aboveRisers": false,
+			"lineStyle": {
+				"width": 1,
+				"color": "#EBEEFC",
+				"dash": ""
+			},
+			"ticks": {
+				"length": 5,
+				"visible": true,
+				"style": "outer",
+				"lineStyle": {
+					"width": 1,
+					"color": "#EBEEFC"
+				}
+			}
+		}
+	},
+	"y2axis": {
+		"mustIncludeZero": true,
+		"title": {
+			"visible": true,
+			"font": "10pt Sans-Serif",
+			"color": "#505050"
+		},
+		"labels": {
+			"visible": true,
+			"font": "9pt Sans-Serif",
+			"color": "#808080",
+			"excludeMin": false,
+			"rotation": null
+		},
+		"bodyLineStyle": {
+			"width": 1,
+			"color": "#E0E0E0",
+			"dash": ""
+		},
+		"baseLineStyle": {
+			"width": 1,
+			"color": "#E0E0E0",
+			"dash": ""
+		},
+		"minorGrid": {
+			"visible": false,
+			"count": null,
+			"lineStyle": {
+				"width": 1,
+				"color": "#EEEEEE",
+				"dash": ""
+			},
+			"ticks": {
+				"length": 5,
+				"style": "outer",
+				"visible": false,
+				"lineStyle": {
+					"width": 1,
+					"color": "#BABABA"
+				}
+			}
+		},
+		"majorGrid": {
+			"visible": false,
+			"aboveRisers": false,
+			"lineStyle": {
+				"width": 1,
+				"color": "#EEEEEE",
+				"dash": ""
+			},
+			"ticks": {
+				"length": 5,
+				"visible": true,
+				"style": "outer",
+				"lineStyle": {
+					"width": 1,
+					"color": "#BABABA"
+				}
+			}
+		}
+	},
+	"zaxis": {
+		"title": {
+			"text": "",
+			"visible": true,
+			"font": "10pt Sans-Serif",
+			"color": "#505050"
+		},
+		"labels": {
+			"visible": true,
+			"font": "9pt Sans-Serif",
+			"color": "#808080",
+			"excludeMin": false,
+			"excludeMax": "auto",
+			"rotation": null
+		},
+		"majorGrid": {
+			"visible": false,
+			"ticks": {
+				"visible": false
+			}
+		}
+	},
+	
+	"matrixProperties": {
+		"rowLabels": {
+			"color": "#505050",
+			"font": "8pt Sans-Serif"
+		},
+		"colLabels": {
+			"color": "#505050",
+			"font": "8pt Sans-Serif"
+		},
+		"rowHeader": {
+			"color": "#505050",
+			"font": "10pt Sans-Serif"
+		},
+		"colHeader": {
+			"color": "#505050",
+			"font": "10pt Sans-Serif"
+		},
+		"cellBorder": {
+			"width": 1,
+			"color": "#E0E0E0"
+		}
+	},
+	"tagcloudProperties": {
+		"engine": "new", 
+		"font": "14pt Sans-serif"
+	},
+	"morphAnimation": {
+		"duration": 1000
+	},
+    "dataGridProperties": {
+        "rowHeader": {
+            "labels": {
+                "color": "rgb(51,51,51)",
+                "font": "10pt Sans-Serif"
+            },
+            "title": {
+                "color": "rgb(51,51,51)",
+                "font": "bold 10pt Sans-Serif",
+                "dividerLine": {
+                    "color": "#E0E0E0"
+                }
+            },
+            "innerGridLines": {
+                "horizontal": {
+                    "color": "#E0E0E0"
+                },
+                "vertical": {
+                    "color": "#E0E0E0"
+                }
+            },
+            "fill": "rgba(255,255,255,0)",
+            "border": {
+                "color": "#E0E0E0"
+            },
+            "dividerLine": {
+                "color": "#E0E0E0"
+            }
+        },
+        "colHeader": {
+            "labels": {
+                "color": "rgb(51,51,51)",
+                "font": "10pt Sans-Serif"
+            },
+            "lastLabels": {
+                "color": "rgb(51,51,51)",
+                "font": "bold 10pt Sans-Serif"
+            },
+            "title": {
+                "color": "rgb(51,51,51)",
+                "font": "bold 10pt Sans-Serif",
+                "dividerLine": {
+                    "color": "#E0E0E0"
+                }
+            },
+            "innerGridLines": {
+                "horizontal": {
+                    "color": "#E0E0E0"
+                },
+                "vertical": {
+                    "color": "#E0E0E0"
+                }
+            },
+            "fill": "rgba(255,255,255,0)",
+            "border": {
+                "color": "#E0E0E0"
+            },
+            "dividerLine": {
+                "color": "#E0E0E0"
+            },
+            "sorting": {
+                "enabled": true
+            },
+            "resize": {
+                "enabled": true
+            },
+        },
+        "cell": {
+            "labels": {
+                "color": "rgb(51,51,51)",
+                "font": "10pt Sans-Serif"
+            },
+            "innerGridLines": {
+                "horizontal": {
+                    "color": "#E0E0E0"
+                },
+                "vertical": {
+                    "color": "#E0E0E0"
+                }
+            },
+            "layout": {
+                "cellPadding": {
+                    "top": 8,
+                    "right": 12,
+                    "bottom": 8,
+                    "left": 12
+                }
+            }
+        },
+        "columnTotals": {
+            "border": {
+                "color": "#E0E0E0"
+            },
+            "dividerLine": {
+                "width": 1,
+                "color": "#E0E0E0"
+            },
+            "cellLabel": {
+                "color": "rgb(51,51,51)",
+                "font": "bold 10pt Sans-Serif"
+            }
+        },
+    },
+	"riserCycleEndLightness": 0.8,
+	"riserBevel": "none",
+	"showNullGroups": false,
+	"narrativeText": {
+		"label": {
+			"font": "11pt Arial",
+			"color": "#000000",
+			"align": "left" 
+		},
+		"backgroundColor": "#FFFFFF",
+		"border": {
+			"width": 0,
+			"color": "#000000",
+			"dash": "" 
+		}
+	},
+	"extensions": {
+		"com.esri.map": {
+			"baseLayer": {
+				"basemap": "gray"
+			}
+		}
+	},
+
+	"previewSelection":{
+		"selectedColor": null,
+	},
+
+	"dataSelection": {
+		"selectedBorder": {
+			"width": 2, 
+			"color": 'auto'
+		},
+		"unselectedColor": '70% transparent',
+		"selectionRect": {
+			"fill": "rgba(120, 120, 180, 0.45)",
+			"border": {
+				"width": 1,
+				"color": "rgba(120, 120, 205, 0.8)"
+			}
+		}
+	},
+
+	"mouseOverIndicator":{
+		"border": {
+			"color": 'auto', 
+			"width": 1
+		},
+		"marker": {
+			"color": '#F5B800',
+			"size": 8,
+			"border": {
+				"width": 1,
+				"color": 'auto'
+			}
+		}
+	},
+	
+	"htmlToolTip" : {
+		"fill" : "rgba(0,0,0,1)",
+		"cascadeMenuStyle" : {
+			"label" : {
+				"font" : "12px sans-serif",
+				"color" : "white"
+			},
+			"nameValue" : {
+				"name" : {
+					"font" : "12px sans-serif",
+					"color" : "rgb(255, 246, 206)"
+				},
+				"value" : {
+					"font" : "12px sans-serif",
+					"color" : "white"
+				}
+			},
+            "hover": {
+                  "fill": "#333333",
+                  "labelColor": "white"
+             }
+		},
+		"border" : {
+			"color" : "rgba(0,0,0,.8)", 
+			"cornerRadius" : 4 
+		},
+		"style" : {
+			"color" : "white",
+			"padding": "10px"
+		}			
+	},
+	
+	
+    
+    "trendline": {
+         "mode": "linear",
+         "lineStyle": {
+            "width": 2, 
+            "color": "#FF4D4D", 
+            "dash": "short_dash"
+        },
+   },
+
+
+introAnimation: {
+   enabled: true,
+   duration: 1000},
+
+*END
