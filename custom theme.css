@@ -1,0 +1,66 @@
+// Global Resources / Themes / Custom / CustomerName / theme.css
+
+/*Copyright 1996-2017 Information Builders, Inc. All rights reserved.*/
+/* $Revision: 0.1 $: */
+
+.pd-page-runner,
+.pd-page-tab-content-wrapper,
+.df-theme-background,
+.pd-page {
+    /* first light yellow 255,255,230 #ffffe6 */ 
+    /* light yellow 255, 252, 245 #fffcf5 */
+        background: #fffcf5; 
+}
+
+
+.breadcrumb {
+    box-shadow: none;
+}
+
+
+.resizeContainer {
+    height: 80% ;
+    margin: 0em;
+}
+
+/* all tabs in container follow same style? */ 
+.otherFormatTabs {
+     font-style: italic;
+     font-size:small;
+     color: grey;
+}
+
+
+.pd-filter-window > .ibx-dialog-main-box > .ibx-dialog-title-box {
+    /* SP+ orange rgba(250,166,26,255) */ 
+    /* SP+ orange lightened 50% #FDD38C 253,211,140) */ 
+    /* background-color: rgba(253,211,140,255); */ 
+
+    /* testing */ 
+    /* background-color: rgba(255,252,245,255); */ 
+    background-color: rgba(232,232,232,255);
+    
+    
+    color: rgba(202,23,30,255);
+}
+
+.pd-filter-grid {
+    /* light yellow */ 
+    background-color: #fffcf5;
+    border: none;
+    box-shadow: none;
+}
+
+.pd-page-header {
+    /* SP+ orange rgba(250,166,26,255) */ 
+    /* background-color: rgba(253,211,140,255); */ 
+    
+    /* background-color: rgba(255,252,245,255); */ 
+    background-color: rgba(232,232,232,255);
+    
+    box-shadow: none;
+    max-height: 60px;
+    border-bottom: none;
+    color: rgba(202,23,30,255);
+    font-style: bold;
+}
