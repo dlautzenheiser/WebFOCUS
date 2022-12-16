@@ -2,6 +2,7 @@
 
 -DEFAULT &SearchString = 'ALL';
 -DEFAULT &LastRunStatus = '_FOC_NULL';
+-DEFAULT &UserID = '_FOC_NULL'; 
 
 -DEFAULT &Active = 'Y';
 -DEFAULT &IntervalType = '_FOC_NULL';
@@ -12,6 +13,7 @@
 -PROMPT &Active.(<Active,Y>,<Inactive,N>,<All,_FOC_NULL>).Active?.;
 -PROMPT &LastRunStatus.(<All,_FOC_NULL>,<Failed,FAILURE>,<Warning,WARNING>,<No Errors,NOERROR>).Last Run Status.; 
 -PROMPT &IntervalType.(<All,_FOC_NULL>,<On-Demand,O>,<Custom,C>,<Daily,D>,<Weekly,W>,<Monthly,M>,<Yearly,Y>).Run Interval.; 
+-PROMPT &UserID.Enter UserID search string in lower case or ALL.; 
 -PROMPT &Details.(<No,N>,<Yes,Y>).Show Packet and Task Names?.; 
 -PROMPT &Parameters.(<No,N>,<Yes,Y>).Show Parameters?.; 
 -PROMPT &WFFMT.(<Online,HTML>,<Spreadsheet,XLSX>).Output Format.;
@@ -23,6 +25,8 @@
 -SET &UPSEARCH2 = STRREP(&UPSEARCH.LENGTH, '&UPSEARCH.EVAL', 1, ' ', 1, '_', &UPSEARCH.LENGTH, 'A&UPSEARCH.LENGTH'); 
 -TYPE UPSEARCH="&UPSEARCH.EVAL"
 
+-SET &Search_UserID = IF '&UserID.EVAL' IS 'ALL' OR 'all' OR 'All' OR '' THEN '_FOC_NULL' ELSE '&UserID.EVAL'; 
+-SET &UserID_Desc = IF '&Search_UserID.EVAL' IS '_FOC_NULL' THEN 'All' ELSE '&Search_UserID.EVAL'; 
 
 -SET &BYDISPLAY = IF &WFFMT IS 'HTML' THEN 'OFF' ELSE 'ON'; 
 
@@ -84,24 +88,31 @@ REALLYACTIVE/A1 = IF (ACTIVE IS 'Y' AND LASTEXSTATUS IS 'FAILURE') THEN 'N' ELSE
  IF (INTERVALTYPE IS 'O' AND ACTIVE IS 'Y' AND LAST_RUNTIME LT '&DATEYY.EVAL') THEN 'N' ELSE 
  IF (INTERVALTYPE NE 'O' AND ACTIVE IS 'Y' AND NEXT_RUNTIME IS MISSING) THEN 'N' ELSE 'Y'; 
 
+DATES_FIRST2/A2 = EDIT(DATES,'99');
+RUN_FREQ/A10 = DECODE DATES_FIRST2 ('A1' '1st' 'A2' '2nd' 'A3' '3rd' 'A4' '4th' 'A5' 'Last' ELSE ''); 
+
+
 END
 TABLE FILE BOTSCHED 
 WHERE ACTIVE IS '&Active.EVAL';
 WHERE INTERVALTYPE IS '&IntervalType.EVAL'; 
 WHERE LASTEXSTATUS IS '&LastRunStatus.EVAL'; 
 WHERE UPJOBDESC CONTAINS '&UPSEARCH.EVAL' OR UPPACKETNAME CONTAINS '&UPSEARCH.EVAL' OR UPTASKNAME CONTAINS '&UPSEARCH.EVAL'; 
+WHERE CASTER_USER CONTAINS '&Search_UserID.EVAL'; 
 
 WRITE REALLYACTIVE  NOPRINT 
 
 BY ACTIVEDESC AS 'Status' UNDER-LINE 
--* BY JOBDESC AS 'Job Description'
--* BY CASTER_USER AS 'RC UserID'
 -* BY NOTIFY_SUBJECT AS 'Notify Subject'
 -* BY FULLDISTLIST AS 'Distribution List'
 
 BY INTERVALDESC AS 'Interval'
+-* BY DATES BY DATES_FIRST2
 BY JOBDESC AS 'Job Description'
+BY RUN_FREQ AS 'Day of,Month' 
 BY FULLDESC AS 'Days Run'
+BY RUNEVERY AS 'Every'
+BY CASTER_USER AS 'Job UserID'
 
 
 -* BY STARTTIMEZONE AS 'Start Timezone'
@@ -128,7 +139,7 @@ BY PARAM_VALUE AS 'Parameter Value'
 
 HEADING 
 "Search Scheduled Jobs &SearchStringDesc.EVAL "
-"Status: &ActiveDesc.EVAL / Last Run Status: &LastRunStatusDesc / Interval Type: &IntervalTypeDesc.EVAL " 
+"Status: &ActiveDesc.EVAL / Last Run Status: &LastRunStatusDesc / Interval Type: &IntervalTypeDesc.EVAL / UserID: &UserID_Desc.EVAL" 
 " "
 
 ON TABLE SET DROPBLNKLINE ALL
