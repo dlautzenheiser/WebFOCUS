@@ -1,4 +1,4 @@
--SET &ECHO = 'OFF';
+-SET &ECHO = 'ALL';
 
 -DEFAULT &SearchString = 'ALL';
 -DEFAULT &LastRunStatus = '_FOC_NULL';
@@ -13,7 +13,8 @@
 -PROMPT &Active.(<Active,Y>,<Inactive,N>,<All,_FOC_NULL>).Active?.;
 -PROMPT &LastRunStatus.(<All,_FOC_NULL>,<Failed,FAILURE>,<Warning,WARNING>,<No Errors,NOERROR>).Last Run Status.; 
 -PROMPT &IntervalType.(<All,_FOC_NULL>,<On-Demand,O>,<Custom,C>,<Daily,D>,<Weekly,W>,<Monthly,M>,<Yearly,Y>).Run Interval.; 
--PROMPT &SearchUserID.Enter UserID search string in lower case or ALL.; 
+-PROMPT &SearchString.Enter Jobname search string.; 
+-PROMPT &SearchUserID.Enter UserID search string.; 
 -PROMPT &Details.(<No,N>,<Yes,Y>).Show Packet and Task Names?.; 
 -PROMPT &Parameters.(<No,N>,<Yes,Y>).Show Parameters?.; 
 -PROMPT &WFFMT.(<Online,HTML>,<Spreadsheet,XLSX>).Output Format.;
@@ -26,6 +27,8 @@
 
 -SET &SearchUserID = IF '&SearchUserID.EVAL' IS 'ALL' OR 'all' OR 'All' OR '' THEN '_FOC_NULL' ELSE '&SearchUserID.EVAL'; 
 -SET &SearchUserID_Desc = IF '&SearchUserID.EVAL' IS '_FOC_NULL' THEN 'All' ELSE '&SearchUserID.EVAL'; 
+
+-SET &LOUSER = IF '&SearchUserID.EVAL' IS '_FOC_NULL' THEN '_FOC_NULL' ELSE LOCASE(&SearchUserID.LENGTH, '&SearchUserID.EVAL', 'A&SearchUserID.LENGTH'); 
 
 -SET &BYDISPLAY = IF &WFFMT IS 'HTML' THEN 'OFF' ELSE 'ON'; 
 
@@ -97,7 +100,7 @@ WHERE ACTIVE IS '&Active.EVAL';
 WHERE INTERVALTYPE IS '&IntervalType.EVAL'; 
 WHERE LASTEXSTATUS IS '&LastRunStatus.EVAL'; 
 WHERE UPJOBDESC CONTAINS '&UPSEARCH.EVAL' OR UPPACKETNAME CONTAINS '&UPSEARCH.EVAL' OR UPTASKNAME CONTAINS '&UPSEARCH.EVAL'; 
-WHERE CASTER_USER CONTAINS '&SearchUserID.EVAL'; 
+WHERE CASTER_USER CONTAINS '&LOUSER.EVAL'; 
 
 WRITE REALLYACTIVE  NOPRINT 
 
@@ -138,7 +141,7 @@ BY PARAM_VALUE AS 'Parameter Value'
 
 HEADING 
 "Search Scheduled Jobs &SearchStringDesc.EVAL "
-"Status: &ActiveDesc.EVAL / Last Run Status: &LastRunStatusDesc / Interval Type: &IntervalTypeDesc.EVAL / UserID: &SearchUserID_Desc.EVAL" 
+"Status: &ActiveDesc.EVAL / Last Run Status: &LastRunStatusDesc / Interval Type: &IntervalTypeDesc.EVAL / UserID: '&SearchUserID_Desc.EVAL' " 
 " "
 
 ON TABLE SET DROPBLNKLINE ALL
