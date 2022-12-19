@@ -1,0 +1,172 @@
+
+-SET &ECHO = 'OFF'; 
+
+-SET &YEAR = 2021;
+-SET &MONTH = 01; 
+
+-* if enddate is in the future, use today's date instead 
+-SET &TODAY = &MDYY; 
+-SET &TODAY_OFFSET = DATECVT(&TODAY,'I8MDYY', 'MDYY');         
+-TYPE TODAY=&TODAY / TODAY_OFFSET=&TODAY_OFFSET 
+
+-SET &TODAY_DATE = DATECVT(&TODAY_OFFSET,'MDYY','A8MDYY');
+-SET &TODAY_MM = EDIT('&TODAY_DATE.EVAL', '99$$$$$$');
+-SET &TODAY_DD = EDIT('&TODAY_DATE.EVAL', '$$99$$$$');
+-SET &TODAY_YY = EDIT('&TODAY_DATE.EVAL', '$$$$9999');
+-SET &TODAY_MONTHNAME = DECODE &TODAY_MM (01 January 02 February 03 March 04 April 05 May 06 June 07 July 08 August 09 September 10 October 11 November 12 December ELSE 'BadMonth'); 
+-SET &TODAY_END = '&TODAY_MONTHNAME.EVAL' || (' ' | '&TODAY_DD.EVAL' | ' ' | '&TODAY_YY.EVAL') ; 
+
+-TYPE Calculated end date for today is TODAY_END=&TODAY_END  
+
+ENGINE SQLMSS SET DEFAULT_CONNECTION CPSSSAS
+SQL SQLMSS PREPARE SQLOUT FOR
+SELECT CUR_YEAR, CUR_MONTH, CUR_MONTHNUM 
+from WFDS.dbo.wfCurrentPeriod ;
+END
+TABLE FILE SQLOUT
+WRITE 
+COMPUTE CURRENT_YEAR/A4 = CUR_YEAR; 
+COMPUTE CURRENT_MONTHNUM/A2 = CUR_MONTHNUM; 
+COMPUTE CURRENT_MONTHNAME/A12 = TRIM('B', CUR_MONTH, 12, ' ', 1, 'A12'); 
+BY CUR_YEAR NOPRINT 
+BY CUR_MONTHNUM NOPRINT 
+BY CUR_MONTH NOPRINT 
+ON TABLE SET HOLDLIST PRINTONLY 
+ON TABLE HOLD AS TEMPDATES
+END
+-RUN
+-IF &FOCERRNUM NE 0 THEN GOTO ERROR; 
+-IF &LINES IS 0 THEN GOTO ERROR; 
+
+-READ TEMPDATES &CURRENT_YEAR.A4. &CURRENT_MONTHNUM.A2. &CURRENT_MONTHNAME.A12. ;
+-TYPE CURRENT_YEAR='&CURRENT_YEAR.EVAL' 
+-TYPE CURRENT_MONTHNUM='&CURRENT_MONTHNUM.EVAL'
+-TYPE CURRENT_MONTHNAME='&CURRENT_MONTHNAME.EVAL'
+
+-SET &MONTHNUM = DECODE &CURRENT_MONTHNUM (1 01 2 02 3 03 4 04 5 05 6 06 7 07 8 08 9 09 10 10 11 11 12 12 ELSE 99); 
+
+-* YEAR/MONTH for Revenue, AR, Payroll 
+-SET &YEAR = &CURRENT_YEAR ;
+-SET &MONTH = &MONTHNUM ; 
+-TYPE Writing default YEAR=&YEAR and MONTH=&MONTH 
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_default_portal_year_and_month.fex 
+-RUN 
+-WRITE DEFAULTDATES -DEFAULT YEAR=&YEAR ; 
+-WRITE DEFAULTDATES -DEFAULT MONTH=&MONTH ;  
+
+-* SET variables for Revenue Internal tab (not selectable by user on screen) 
+-SET &InternalPeriod = '''' || 'CurrentPeriod' || '''';
+-SET &InternalYear = '''' || '&YEAR.EVAL' || '''';
+-SET &InternalMonth = '''' || '&MONTH.EVAL' || '''';
+-TYPE Writing set InternalPeriod=&InternalPeriod with InternalYear=&InternalYear and InternalMonth=&InternalMonth 
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_set_portal_revenue_internal.fex 
+-RUN 
+-WRITE DEFAULTDATES -SET &|InternalPeriod=&InternalPeriod ; 
+-WRITE DEFAULTDATES -SET &|InternalYear=&InternalYear ; 
+-WRITE DEFAULTDATES -SET &|InternalMonth=&InternalMonth ; 
+
+
+-* date functions like DATEMOV and DATEADD need offset, not the string, so use DATECVT to make offset values 
+-SET &STARTING = &MONTHNUM || '01' || &CURRENT_YEAR ;  
+-SET &STARTING_OFFSET = DATECVT(&STARTING,'I8MDYY', 'MDYY');         
+
+-* calculate beginning and ending of starting date month 
+-SET &STARTING_EOM_OFFSET1 = DATEMOV(&STARTING_OFFSET, 'EOM'); 
+-SET &STARTING_EOM_OFFSET = IF &STARTING_EOM_OFFSET1 GT &TODAY_OFFSET THEN &TODAY_OFFSET ELSE &STARTING_EOM_OFFSET1; 
+-SET &STARTING_EOM = DATECVT(&STARTING_EOM_OFFSET,'MDYY','A8MDYY');     
+-SET &DAY_EOM = EDIT(&STARTING_EOM,'$$99$$$$'); 
+-SET &DAY_BOM = '01'; 
+-SET &START = '&CURRENT_MONTHNAME.EVAL' || (' ' | '&DAY_BOM.EVAL' | ', ' | '&CURRENT_YEAR.EVAL') ;
+-SET &END   = '&CURRENT_MONTHNAME.EVAL' || (' ' | '&DAY_EOM.EVAL' | ', ' | '&CURRENT_YEAR.EVAL') ; 
+
+
+-* STARTDATE/ENDDATE for Parking Analytics
+-SET &STARTDATE = '''' || '&START.EVAL' || '''' ;
+-SET &ENDDATE   = '''' || '&END.EVAL'  || ''''; 
+-TYPE Writing default STARTDATE=&STARTDATE and ENDDATE=&ENDDATE 
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_default_portal_startdate_and_enddate.fex 
+-RUN 
+-WRITE DEFAULTDATES -DEFAULT &|STARTDATE=&STARTDATE ; 
+-WRITE DEFAULTDATES -DEFAULT &|ENDDATE=&ENDDATE ;  
+
+-* START_DATE/END_DATE for RMS, Online Sales 
+-SET &START_DATE = '''' || '&START.EVAL' || '''';
+-SET &END_DATE   = '''' || '&END.EVAL' || ''''; 
+-TYPE Writing default START_DATE=&STARTDATE and END_DATE=&ENDDATE 
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_default_portal_start_date_and_end_date.fex 
+-RUN 
+-WRITE DEFAULTDATES -DEFAULT &|START_DATE=&START_DATE ; 
+-WRITE DEFAULTDATES -DEFAULT &|END_DATE=&END_DATE ;  
+
+-* REPORTDATE for Occupancy 
+-SET &REPORTDATE = '''' || '&START.EVAL' || '''';
+-TYPE Writing default REPORTDATE=&STARTDATE 
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_default_portal_reportdate.fex 
+-RUN 
+-WRITE DEFAULTDATES -DEFAULT &|REPORTDATE=&REPORTDATE ; 
+
+-* TRANSDATE for Financial Analytics 
+-SET &TRANSDATE = '''' || '&START.EVAL' || '''';
+-TYPE Writing default TRANSDATE=&TRANSDATE 
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_default_portal_transdate.fex 
+-RUN 
+-WRITE DEFAULTDATES -DEFAULT &|TRANSDATE=&TRANSDATE ; 
+
+-* END_DATE for RMS 
+-SET &END_DATE = '''' || '&END.EVAL' || '''';
+-TYPE Writing default END_DATE=&END_DATE 
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_default_portal_end_date.fex 
+-RUN 
+-WRITE DEFAULTDATES -DEFAULT &|END_DATE=&END_DATE ; 
+
+
+-* DATEOPTION for Bags Portal 
+-TYPE Creating dynamic pulldown for Bags Portal &MONTHNUM.EVAL/&CURRENT_YEAR.EVAL 
+CREATE FILE portals/bags/user_portal_current_period_yearmonth_filters DROP 
+MODIFY FILE portals/bags/user_portal_current_period_yearmonth_filters
+FREEFORM CODE VALUE 
+MATCH CODE 
+ON MATCH REJECT
+ON NOMATCH INCLUDE
+DATA
+ CODE='0','Use Current Period (&MONTHNUM.EVAL/&CURRENT_YEAR.EVAL)',$
+ CODE='1','Use Start and End Dates',$ 
+END
+-RUN 
+
+-* Date options for Enforcements
+TABLE FILE VWFIRSTDAYOFMONTHCURRENTDATE
+PRINT FIRSTDAYOFMONTH
+CURRENTDATE
+ON TABLE HOLD AS TEMP
+END
+-RUN
+
+-IF &FOCERRNUM NE 0 THEN GOTO ERROR; 
+-IF &LINES IS 0 THEN GOTO ERROR; 
+
+-TYPE StartDate:  &STARTDATE EndDate:  &ENDDATE
+
+ FILEDEF DEFAULTDATES DISK portals/common/common_include_set_portal_enforcements_start_end_dates.fex 
+-RUN
+-WRITE DEFAULTDATES -DEFAULT &|STARTDATE=&STARTDATE.EVAL ; 
+-WRITE DEFAULTDATES -DEFAULT &|ENDDATE=&ENDDATE.EVAL ; 
+
+
+-* generate report to prevent failure 
+ EX IBFS:/WFC/Repository/Portals/Common/Utilities/build_portal_common_report.fex
+-RUN 
+
+
+-GOTO END_PROC 
+
+-ERROR
+-TYPE *ERROR* Process to build default date settings failed.
+-GOTO END_PROC 
+
+-END_PROC 
+
+
+
+
+
