@@ -1,0 +1,18 @@
+-TYPE .................................................................
+-TYPE Global AcademicPeriod_Prior=&&AcademicPeriod_Prior 
+-TYPE Global AcademicPeriod_Desc_Prior=&&AcademicPeriodDesc_Prior
+-TYPE .................................................................
+-TYPE Global AcademicPeriod_Previous=&&AcademicPeriod_Previous 
+-TYPE Global AcademicPeriod_Desc_Previous=&&AcademicPeriodDesc_Previous 
+-TYPE .................................................................
+-TYPE Global AcademicPeriod_Current=&&AcademicPeriod_Current 
+-TYPE Global AcademicPeriod_Desc_Current=&&AcademicPeriodDesc_Current 
+-TYPE Global AcademicPeriod_StartDate_Current=&&AcademicPeriod_StartDate_Current 
+-TYPE Global AcademicPeriod_EndDate_Current=&&AcademicPeriod_EndDate_Current 
+-TYPE .................................................................
+-TYPE Global AcademicPeriod_Upcoming=&&AcademicPeriod_Upcoming 
+-TYPE Global AcademicPeriod_Desc_Upcoming=&&AcademicPeriodDesc_Upcoming  
+-TYPE .................................................................
+-TYPE Global CalendarYearMonth_Previous=&&CalendarYearMonth_Previous 
+-TYPE Global CalendarYear_Previous=&&CalendarYear_Previous 
+-TYPE Global CalendarMonth_Previous=&&CalendarMonth_Previous 
