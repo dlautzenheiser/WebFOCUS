@@ -1,0 +1,19 @@
+-* common logic to calculate YYMD beginning and ending dates for current month 
+
+-* date functions like DATEMOV and DATEADD need offset, not the string, so use DATECVT to make offset values 
+-SET &TODAY_YYMD = &YYMD; 
+-SET &TODAY_OFFSET = DATECVT(&TODAY_YYMD,'I8YYMD', 'YYMD');         
+-* -TYPE TODAY_OFFSET=&TODAY_OFFSET 
+
+-* using today, calculate beginning and ending of this month 
+-SET &TODAY_BOM_OFFSET = DATEMOV(&TODAY_OFFSET, 'BOM'); 
+-SET &TODAY_YYMD_BOM = DATECVT(&TODAY_BOM_OFFSET,'MDYY','A8YYMD'); 
+-SET &TODAY_EOM_OFFSET = DATEMOV(&TODAY_OFFSET, 'EOM'); 
+-SET &TODAY_YYMD_EOM = DATECVT(&TODAY_EOM_OFFSET,'MDYY','A8YYMD');     
+
+-TYPE ............................................................
+-TYPE TODAY_YYMD=&TODAY_YYMD 
+-TYPE TODAY_YYMD_BOM=&TODAY_YYMD_BOM 
+-TYPE TODAY_YYMD_EOM=&TODAY_YYMD_EOM 
+-TYPE ............................................................
+
